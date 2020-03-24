@@ -32,10 +32,84 @@
           <v-card-text>
             <v-row class="fill-height" align="center" justify="center">
               <v-col cols="12">
-                <GChart type="AreaChart" :data="dailyConfirms" :options="contagiosDiariosOptions" />
+                <v-card class="mt-4 mx-auto">
+                  <v-sheet class="v-sheet--offset mx-auto" color="cyan" elevation="12">
+                    <v-sparkline
+                      fill
+                      :gradient="gradient"
+                      :line-width="width"
+                      :padding="padding"
+                      :smooth="radius || false"
+                      :value="valueConfirmedNew"
+                      :labels="labels"
+                      auto-draw
+                    ></v-sparkline>
+                  </v-sheet>
 
-                <GChart type="AreaChart" :data="dailySick" :options="aumentoEnfermosOptions" />
+                  <v-card-text class="pt-0">
+                    <div class="title font-weight-light mb-2">Nuevos Casos por día</div>
+                    <div
+                      class="subheading font-weight-light grey--text"
+                    >Con respecto al día anterior</div>
+                    <v-divider class="my-2"></v-divider>
+                    <v-icon class="mr-2" small>mdi-clock</v-icon>
+                    <span class="caption grey--text font-weight-light">Actualizado al día</span>
+                  </v-card-text>
+                </v-card>
               </v-col>
+              <v-col cols="12">
+                <v-card class="mt-4 mx-auto">
+                  <v-sheet class="v-sheet--offset mx-auto" color="cyan" elevation="12">
+                    <v-sparkline
+                      fill
+                      :gradient="gradient"
+                      :line-width="width"
+                      :padding="padding"
+                      :smooth="radius || false"
+                      :value="valueDeathsNew"
+                      :labels="labels"
+                      auto-draw
+                    ></v-sparkline>
+                  </v-sheet>
+
+                  <v-card-text class="pt-0">
+                    <div class="title font-weight-light mb-2">Nuevas muertes por día</div>
+                    <div
+                      class="subheading font-weight-light grey--text"
+                    >Con respecto al día anterior</div>
+                    <v-divider class="my-2"></v-divider>
+                    <v-icon class="mr-2" small>mdi-clock</v-icon>
+                    <span class="caption grey--text font-weight-light">Actualizado al día</span>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+              <v-col cols="12">
+                <v-card class="mt-4 mx-auto">
+                  <v-sheet class="v-sheet--offset mx-auto" color="cyan" elevation="12">
+                    <v-sparkline
+                      fill
+                      :gradient="gradient2"
+                      :line-width="width"
+                      :padding="padding"
+                      :smooth="radius || false"
+                      :value="valueRecoveredNew"
+                      :labels="labels"
+                      auto-draw
+                    ></v-sparkline>
+                  </v-sheet>
+
+                  <v-card-text class="pt-0">
+                    <div class="title font-weight-light mb-2">Nuevos curados por día</div>
+                    <div
+                      class="subheading font-weight-light grey--text"
+                    >Con respecto al día anterior</div>
+                    <v-divider class="my-2"></v-divider>
+                    <v-icon class="mr-2" small>mdi-clock</v-icon>
+                    <span class="caption grey--text font-weight-light">Actualizado al día</span>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+              <!--
               <v-col cols="4">
                 <v-card v-if="averageLethaly != null">
                   <v-card-title>
@@ -66,6 +140,7 @@
                   </v-card-text>
                 </v-card>
               </v-col>
+              -->
             </v-row>
           </v-card-text>
           <v-card-actions class="px-3">
@@ -73,7 +148,7 @@
               <v-expansion-panel>
                 <v-expansion-panel-header>Ver estadísticas</v-expansion-panel-header>
                 <v-expansion-panel-content>
-                  <v-data-table :headers="headers" :items="oneCountryData"></v-data-table>
+                  <v-data-table :headers="headers" :items="oneCountryData" sort-by="date" sort-desc></v-data-table>
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
@@ -90,6 +165,14 @@
 </template>
 
 <script>
+const gradients = [
+  ["#222"],
+  ["#42b3f4"],
+  ["red", "orange", "yellow"],
+  ["purple", "violet"],
+  ["#00c6ff", "#F0F", "#FF0"],
+  ["#f72047", "#ffd200", "#1feaea"]
+];
 import axios from "axios";
 import { mapState, mapGetters, mapActions } from "vuex";
 import { GChart } from "vue-google-charts";
@@ -100,6 +183,14 @@ export default {
     GChart
   },
   data: () => ({
+    fill: true,
+    gradient: gradients[4],
+    gradient2: gradients[3],
+    gradients,
+    padding: 8,
+    radius: 5,
+    value: [0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
+    width: 2,
     headers: [
       {
         text: "Evolución",
@@ -138,6 +229,18 @@ export default {
     ...mapGetters({
       oneCountryData: "stats/oneCountryData"
     }),
+    labels() {
+      return Array.from(this.oneCountryData, x => x.date);
+    },
+    valueConfirmedNew() {
+      return Array.from(this.oneCountryData, x => x.confirmedNew);
+    },
+    valueDeathsNew() {
+      return Array.from(this.oneCountryData, x => x.deathsNew);
+    },
+    valueRecoveredNew() {
+      return Array.from(this.oneCountryData, x => x.recoveredNew);
+    },
     fechas() {
       let res = [];
       this.oneCountryData.forEach(function(e, i) {

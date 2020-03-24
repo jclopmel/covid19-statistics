@@ -13,20 +13,20 @@ export default {
 			var recoveredOld = 0;
 
 			res.forEach(function (e) {
-				console.log(deathsOld);
-				console.log(e.deaths);
-				deathsNew = e.deaths - deathsOld;
-				console.log(deathsNew);
-				recoveredNew = e.recovered - recoveredOld;
-				confirmedNew = e.confirmed - confirmedOld;
-				deathsOld = e.deaths;
-				recoveredOld = e.recovered;
-				confirmedOld = e.confirmed;
-				e.date = moment(e.date).format("MM - DD")
-				e.confirmedNew = confirmedNew;
-				e.recoveredNew = recoveredNew;
-				e.deathsNew = deathsNew;
-				temp.push(e)
+				if (e.confirmed > 50) {
+					deathsNew = e.deaths - deathsOld;
+					recoveredNew = e.recovered - recoveredOld;
+					confirmedNew = e.confirmed - confirmedOld;
+					deathsOld = e.deaths;
+					recoveredOld = e.recovered;
+					confirmedOld = e.confirmed;
+					e.dateCompleto = moment(e.date).format("DD - MM - YYYY")
+					e.date = moment(e.date).format("DD")
+					e.confirmedNew = confirmedNew;
+					e.recoveredNew = recoveredNew;
+					e.deathsNew = deathsNew;
+					temp.push(e)
+				}
 			})
 		}
 		return temp;
