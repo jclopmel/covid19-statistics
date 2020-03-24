@@ -1,5 +1,6 @@
-export default{
+export default {
 	data: [],
+	dataSpain: [],
 	countries: [],
 	pointer: "",
 	dailyConfirms: [],
