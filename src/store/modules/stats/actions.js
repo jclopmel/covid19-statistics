@@ -1,5 +1,10 @@
 import moment from 'moment';
 export default{
+	recalculateStats({ commit, dispatch }){
+		dispatch('calculateDailySick')
+		dispatch('calculateDailyConfirms')
+		dispatch('calculateAverageLethaly')
+	},
 	calculateDailySick({commit, state, getters}){
 		commit('setDailySick', []);
 

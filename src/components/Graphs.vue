@@ -1,34 +1,10 @@
 <template>
 <v-container>
 <v-row class="">
-<v-col cols="12">
+<v-col
+class="pa-0"
+cols="12">
 
-
-	<!-- <v-carousel
-	ref="carousel"
-	height="100%"
-	light
-	hide-delimiter-background
-	hide-delimiters
-	@change="setCountryFromCarousel(c)"
-	>
-		<v-carousel-item
-        v-for="(c, i) in countries.length"
-        :key="i"
-		>
-	        <v-sheet
-	        color="white"
-			height="100%"
-			tile
-			>
-				<v-row
-				class="fill-height"
-				align="center"
-				justify="center"
-				>
-					<v-col
-					cols="12"
-					> -->
 	<v-card
 	elevation="0"
 	>
@@ -42,6 +18,7 @@
 			justify="center"
 			>
 				<v-col
+				class="pa-0"
 				cols="12"
 				>
 
@@ -59,40 +36,43 @@
 
 				</v-col>
 				<v-col
+				height="100%"
 				cols="4"
 				>
 					<v-card v-if="averageLethaly != null">
-						<v-card-title>
-							<span class="mx-auto">Letalidad Media</span>
+						<v-card-title class="pa-1 pa-sm-2">
+							<span class="mx-auto title display-md-2">Letalidad Media</span>
 						</v-card-title>
-						<v-card-text class="text-center display-1">
-							<span>{{ averageLethaly.toFixed(2) }} %</span>
+						<v-card-text class="text-center subtitle-1 display-md-1">
+							<span class="text-center">{{ averageLethaly.toFixed(2) }} %</span>
 						</v-card-text>
 					</v-card>
 				</v-col>
 				<v-col
+				height="100%"
 				cols="4"
 				>
-					<v-card v-if="averageLethaly != null">
-						<v-card-title>
+					<!-- <v-card v-if="averageLethaly != null">
+						<v-card-title class="pa-1 pa-sm-2">
 							<span class="mx-auto">Letalidad Media</span>
 						</v-card-title>
 						<v-card-text class="text-center display-1">
 							<span>{{ averageLethaly.toFixed(2) }} %</span>
 						</v-card-text>
-					</v-card>
+					</v-card> -->
 				</v-col>
 				<v-col
+				height="100%"
 				cols="4"
 				>
-					<v-card v-if="averageLethaly != null">
-						<v-card-title>
+					<!-- <v-card v-if="averageLethaly != null">
+						<v-card-title class="pa-1 pa-sm-2">
 							<span class="mx-auto">Letalidad Media</span>
 						</v-card-title>
 						<v-card-text class="text-center display-1">
 							<span>{{ averageLethaly.toFixed(2) }} %</span>
 						</v-card-text>
-					</v-card>
+					</v-card> -->
 				</v-col>
 			</v-row>
 		</v-card-text>
@@ -111,11 +91,6 @@
 
 		</v-card-actions>
 	</v-card>
-					<!-- </v-col>
-				</v-row>
-			</v-sheet>
-		</v-carousel-item>
-	</v-carousel> -->
 
 </v-col>
 </v-row>
@@ -146,14 +121,16 @@
 			],
 		  	contagiosDiariosOptions: {
 		        chart: {
-		          title: 'Nuevos Contagios',
-		          subtitle: 'Aumento de contagios diarios',
+		        	legend: 'none',
+					title: 'Nuevos Contagios',
+					subtitle: 'Aumento de contagios diarios',
 		        }
 			},
 			aumentoEnfermosOptions: {
 		        chart: {
-		          title: 'Aumento de Positivos',
-		          subtitle: 'Diferencia entre Nuevos Contagios y Nuevos Recuperados ',
+		        	legend: 'none',
+					title: 'Aumento de Positivos',
+					subtitle: 'Diferencia entre Nuevos Contagios y Nuevos Recuperados ',
 		        }
 			}
 
@@ -228,9 +205,7 @@
 		},
 		methods:{
 			...mapActions({
-				calculateDailySick: "stats/calculateDailySick",
-				calculateDailyConfirms: "stats/calculateDailyConfirms",
-				calculateAverageLethaly: "stats/calculateAverageLethaly"
+				recalculateStats: "stats/recalculateStats"
 			})
 		},
 		mounted(){
@@ -242,22 +217,18 @@
 				_vue.$store.commit('stats/setData', res.data )
 				_vue.$store.commit('stats/setCountries', Object.keys(res.data) )
 
-				_vue.calculateDailySick()
+				_vue.recalculateStats()
 				.finally(function(){
 					
 				})
 
-				_vue.calculateDailyConfirms()
-				.finally(function(){
-					
-				})
-
-				_vue.calculateAverageLethaly()
-				.finally(function(){
-					
-				})
  			})
 
+		},
+		watch:{
+			pointer(newV, oldV){
+				console.log(newV, oldV)
+			}
 		}
 	}
 </script>

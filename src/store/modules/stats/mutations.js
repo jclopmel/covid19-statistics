@@ -17,10 +17,9 @@ export default{
     setAverageLethaly(state, v) {
       state.averageLethaly = v;
     },
-    resetVariables(){
-    	state.data = [];
-		state.dailyConfirms = [];
-		state.dailySick = [];
-		state.mediumLethaly = null;
+    resetVariables(state){
+  		state.dailyConfirms = [];
+  		state.dailySick = [];
+  		state.mediumLethaly = null;
     }
 }
