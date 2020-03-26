@@ -21,17 +21,38 @@ cols="12">
 				class="pa-0"
 				cols="12"
 				>
-
+					<v-skeleton-loader
+					v-if="dailyConfirms.length == 0 || dailyConfirms == undefined"
+					type="image"
+					tile
+					></v-skeleton-loader>
 					<GChart
-					type="AreaChart"
+					v-else
+					type="LineChart"
 					:data="dailyConfirms"
 					:options="contagiosDiariosOptions"
 					/>
 
+					<v-skeleton-loader
+					v-if="dailySick.length == 0 || dailySick == undefined"
+					type="image"
+					tile
+					></v-skeleton-loader>
 					<GChart
-					type="AreaChart"
+					type="LineChart"
 					:data="dailySick"
 					:options="aumentoEnfermosOptions"
+					/>
+
+					<v-skeleton-loader
+					v-if="dailyData.length == 0 || dailyData == undefined"
+					type="image"
+					tile
+					></v-skeleton-loader>
+					<GChart
+					type="AreaChart"
+					:data="dailyData"
+					:options="dailyDataOptions"
 					/>
 
 				</v-col>
@@ -41,9 +62,9 @@ cols="12">
 				>
 					<v-card v-if="averageLethaly != null">
 						<v-card-title class="pa-1 pa-sm-2">
-							<span class="mx-auto title display-md-2">Letalidad Media</span>
+							<span class="text-center subtitle-1 display-md-2 mx-auto">Letalidad Media</span>
 						</v-card-title>
-						<v-card-text class="text-center subtitle-1 display-md-1">
+						<v-card-text class="text-center subtitle-2 display-md-1">
 							<span class="text-center">{{ averageLethaly.toFixed(2) }} %</span>
 						</v-card-text>
 					</v-card>
@@ -81,7 +102,13 @@ cols="12">
 				<v-expansion-panel >
 					<v-expansion-panel-header>Ver estadísticas</v-expansion-panel-header>
 					<v-expansion-panel-content>
+						<v-skeleton-loader
+						v-if="oneCountryData.length == 0 || dailyConfirms == undefined"
+						type="table"
+						tile
+						></v-skeleton-loader>
 						<v-data-table
+						v-else
 						:headers="headers"
 						:items="oneCountryData"
 						></v-data-table>
@@ -120,18 +147,91 @@ cols="12">
 			  { text: 'Curados', value: 'recovered' }
 			],
 		  	contagiosDiariosOptions: {
-		        chart: {
-		        	legend: 'none',
-					title: 'Nuevos Contagios',
-					subtitle: 'Aumento de contagios diarios',
-		        }
+		  		chartArea: {
+		  			width: '80%'
+		  		},
+	        	legend: 'none',
+				title: 'Aumento de contagios diarios',
+				titleTextStyle: {
+					color: '#3c3c3c',
+					fontSize: '16',
+					bold: true,
+				    textAlign: 'center'
+				},
+				colors: ['green', 'yellow'],
+				vAxis: {
+					format: 'short',
+					scaleType: 'log',
+					title: 'Nuevos contagios ( log(x) )',
+				  	titleTextStyle: {
+					    align: 'center'
+					}
+				},
+				hAxis: {
+					title: 'Fechas (mes/dia)',
+				  	titleTextStyle: {
+					    align: 'center'
+					},
+					slantedText: false
+				}
 			},
 			aumentoEnfermosOptions: {
-		        chart: {
-		        	legend: 'none',
-					title: 'Aumento de Positivos',
-					subtitle: 'Diferencia entre Nuevos Contagios y Nuevos Recuperados ',
-		        }
+				chartArea: {
+					width: '80%'
+				},
+	        	legend: 'none',
+				title: 'Aumento de Positivos diarios',
+				titleTextStyle: {
+					color: '#3c3c3c',
+					fontSize: '16',
+					bold: true,
+				    textAlign: 'center'
+				},
+				colors: ['green', 'yellow'],
+				vAxis: {
+					format: 'short',
+					scaleType: 'log',
+					title: 'Nuevos positivos ( log(x) )',
+				  	titleTextStyle: {
+					    align: 'center'
+					}
+				},
+				hAxis: {
+					title: 'Fechas (mes/dia)',
+				  	titleTextStyle: {
+					    align: 'center'
+					},
+					slantedText: false
+				}
+			},
+			dailyDataOptions:{
+				chartArea: {
+					width: '80%'
+				},
+	        	legend: {position: 'top', maxLines: 3},
+				title: 'Datos diarios',
+				titleTextStyle: {
+					color: '#3c3c3c',
+					fontSize: '16',
+					bold: true,
+				    textAlign: 'center'
+				},
+				colors: ['grey', 'green', 'red'],
+				vAxis: {
+					format: 'short',
+					scaleType: 'log',
+					title: 'Casos ( log(x) )',
+				  	titleTextStyle: {
+					    align: 'center'
+					}
+				},
+				hAxis: {
+					title: 'Fechas (mes/dia)',
+				  	titleTextStyle: {
+					    align: 'center'
+					},
+					slantedText: false
+				}
 			}
 
 		}),
@@ -141,6 +241,7 @@ cols="12">
 				countries: state => state.stats.countries,
 				dailyConfirms: state => state.stats.dailyConfirms,
 				dailySick: state => state.stats.dailySick,
+				dailyData: state => state.stats.dailyData,
 				averageLethaly: state => state.stats.averageLethaly
 			}),
 			...mapGetters({

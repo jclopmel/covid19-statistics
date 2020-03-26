@@ -14,12 +14,16 @@ export default{
     setDailySick(state, v) {
       state.dailySick = v;
     },
+    setDailyData(state, v) {
+      state.dailyData = v;
+    },
     setAverageLethaly(state, v) {
       state.averageLethaly = v;
     },
     resetVariables(state){
   		state.dailyConfirms = [];
   		state.dailySick = [];
+      state.dailyData = [];
   		state.mediumLethaly = null;
     }
 }
